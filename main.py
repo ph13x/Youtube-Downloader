@@ -68,7 +68,8 @@ def download_video(url, resolution, download_type):
             else:
                 ydl.download([url])
     except Exception as e:
-        st.write("Sorry, something went wrong")
+        st.error(f"Download failed: {e}")
+
 
 
 
