@@ -4,6 +4,7 @@ import os
 import PIL
 import time
 
+
 st.set_page_config(layout="wide")
 
 fixed_thumbnail_name = "thumbnail"
@@ -57,7 +58,12 @@ def download_video(url, resolution, download_type):
         'format': format_str,
         'outtmpl': os.path.join(download_folder, '%(title)s.%(ext)s'),
         'quiet': True,
-        'progress_hooks': [progress_hook] 
+        'progress_hooks': [progress_hook],
+        'noplaylist': True,
+
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36'
+
+
     }
 
     try:
