@@ -10,17 +10,39 @@ fixed_thumbnail_name = "thumbnail"
 # Format builder
 download_folder = os.path.expanduser("~/Downloads")
 resolution_options = ["360p", "480p", "720p", "1080p"]
-download_type_opt = ["audio", "video"]
+download_type_opt = ["Audio", "Video"]
+
+
+col1, col2 = st.columns(2)
+
 
 
 def get_format_string(resolution, download_type):
     res_num = int(resolution.replace('p', ''))
-    if download_type == 'audio':
+    if download_type == 'Audio':
         return 'bestaudio/best'
-    elif download_type == 'video':
+    elif download_type == 'Video':
         return f'bestvideo[height<={res_num}]+bestaudio/best[height<={res_num}]'
 
-        
+
+
+def progress_hook(d):
+    if d['status'] == 'downloading':
+        if d.get("total_bytes") and d.get("downloaded_bytes"):
+            progress = d["downloaded_bytes"] / d["total_bytes"]
+           
+            progress_bar.progress(progress)      
+        percent = d.get('_percent_str', "0%")
+        speed = d.get('_speed_str', "0 KiB/s")
+        eta = d.get('_eta_str', "N/A")
+
+        status_text.text(f"Downloading... {percent} at {speed}, ETA {eta}")
+
+    elif d['status'] == 'finished':
+        status_text.text("Download finished, now post-processing...")
+
+
+
 
 # Download logic
 def download_video(url, resolution, download_type):
@@ -34,26 +56,30 @@ def download_video(url, resolution, download_type):
     ydl_opts = {
         'format': format_str,
         'outtmpl': os.path.join(download_folder, '%(title)s.%(ext)s'),
-        'quiet': True
+        'quiet': True,
+        'progress_hooks': [progress_hook] 
     }
 
     try:
         with YoutubeDL(ydl_opts) as ydl:
-            ydl.download([url])
-        progress_text = "Downloading..."
-        status_label = st.progress(0)
-        for i, step in enumerate(range(1000)):    
-            status_label.progress((i+1)/1000)
-            st.success("Download Completed!")
-
+            d = ydl.extract_info(url, download=False)
+            if d.get("_type") == 'playlist':
+                st.warning("⚠️This is a playlist, playlist aren't supported")
+            else:
+                ydl.download([url])
     except Exception as e:
         st.write("Sorry, something went wrong")
+
+
+
+
 
 st.title("YouTube Downloader(no ads)")
 
 st.subheader("Free youtube videos for everyone")
 
-video_url = st.text_input("Enter a Url")
+
+video_url = st.text_input("Enter a Url", placeholder="Enter a YouTube link...")
 if video_url:
     ydl_opts = {
         'quiet': True,  # Suppress console output
@@ -80,5 +106,7 @@ if video_url:
 
     download = st.button("Download")
     if download:
+        progress_bar = st.progress(0)
+        status_text = st.empty()
         download_video(video_url, resolution, download_type)
-       
+        
