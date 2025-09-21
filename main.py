@@ -12,7 +12,6 @@ download_folder = os.path.expanduser("~/Downloads")
 resolution_options = ["360p", "480p", "720p", "1080p"]
 download_type_opt = ["audio", "video"]
 
-status_label = st.progress(0, text="")
 
 def get_format_string(resolution, download_type):
     res_num = int(resolution.replace('p', ''))
@@ -43,8 +42,8 @@ def download_video(url, resolution, download_type):
             ydl.download([url])
         progress_text = "Downloading..."
         status_label = st.progress(0)
-        for i, step in enumerate(range(100)):    
-            status_label.progress((i+1)/100)
+        for i, step in enumerate(range(1000)):    
+            status_label.progress((i+1)/1000)
             st.success("Download Completed!")
 
     except Exception as e:
