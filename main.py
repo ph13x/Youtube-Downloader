@@ -125,7 +125,7 @@ else:
 
     st.subheader(video_title)
     
-    st.image(f"{download_folder}/{fixed_thumbnail_name}.jpg")
+    st.image(thumbs)
     resolution = st.selectbox(options=resolution_options, label="Choose Resolution")
     download_type = st.selectbox(options=download_type_opt, label="Choose Download Type")
 
