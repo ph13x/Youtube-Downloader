@@ -3,7 +3,7 @@ from yt_dlp import YoutubeDL
 import os
 import PIL
 import time
-
+import glob
 
 st.set_page_config(layout="wide")
 
@@ -103,8 +103,25 @@ if video_url:
             
         except Exception as e:
             st.error(f"Error retrieving video title: {e}")
-    command = f"yt-dlp --write-thumbnail --skip-download -o '{download_folder}/{fixed_thumbnail_name}' {video_url}"
-    os.system(command)
+
+thumbnail_opts = {
+    "skip_download": True,
+    "writethumbnail": True,
+    "quiet": True,
+    "outtmpl": os.path.join(download_folder, fixed_thumbnail_name),
+    "extractor_args": {"youtube": {"player_client": ["android"]}},
+}
+
+with YoutubeDL(thumbnail_opts) as ydl:
+    ydl.extract_info(video_url, download=False)
+
+# Find whatever thumbnail yt-dlp actually created
+thumbs = glob.glob(os.path.join(download_folder, fixed_thumbnail_name + ".*"))
+
+if thumbs:
+    st.image(thumbs[0])
+else:
+    st.warning("Thumbnail not found")
 
     st.subheader(video_title)
     
