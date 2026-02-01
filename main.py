@@ -93,6 +93,7 @@ if video_url:
         'no_warnings': True, # Suppress warnings
         'extract_flat': True, # Only extract basic info, no full downloads
         'outtmpl': os.path.join(download_folder, fixed_thumbnail_name),
+        "extractor_args": {"youtube": {"player_client": ["android"]}}
         
     }
     with YoutubeDL(ydl_opts) as ydl:
