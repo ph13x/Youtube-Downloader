@@ -117,22 +117,22 @@ if video_url:
         ydl.extract_info(video_url, download=False)
 
 # Find whatever thumbnail yt-dlp actually created
-thumbs = glob.glob(os.path.join(download_folder, fixed_thumbnail_name + ".*"))
+    thumbs = glob.glob(os.path.join(download_folder, fixed_thumbnail_name + ".*"))
 
-if thumbs:
-    st.image(thumbs[0])
-else:
-    st.warning("Thumbnail not found")
+    if thumbs:
+        st.image(thumbs[0])
+    else:
+        st.warning("Thumbnail not found")
 
-    st.subheader(video_title)
-    
-    st.image(thumbs)
-    resolution = st.selectbox(options=resolution_options, label="Choose Resolution")
-    download_type = st.selectbox(options=download_type_opt, label="Choose Download Type")
-
-    download = st.button("Download")
-    if download:
-        progress_bar = st.progress(0)
-        status_text = st.empty()
-        download_video(video_url, resolution, download_type)
+        st.subheader(video_title)
         
+        st.image(thumbs)
+        resolution = st.selectbox(options=resolution_options, label="Choose Resolution")
+        download_type = st.selectbox(options=download_type_opt, label="Choose Download Type")
+
+        download = st.button("Download")
+        if download:
+            progress_bar = st.progress(0)
+            status_text = st.empty()
+            download_video(video_url, resolution, download_type)
+            
