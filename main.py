@@ -55,6 +55,7 @@ def download_video(url, resolution, download_type):
     format_str = get_format_string(resolution, download_type)
 
     ydl_opts = {
+        'cookies': 'cookies.txt',
         'format': format_str,
         'outtmpl': os.path.join(download_folder, '%(title)s.%(ext)s'),
         'quiet': True,
