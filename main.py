@@ -105,16 +105,16 @@ if video_url:
         except Exception as e:
             st.error(f"Error retrieving video title: {e}")
 
-thumbnail_opts = {
-    "skip_download": True,
-    "writethumbnail": True,
-    "quiet": True,
-    "outtmpl": os.path.join(download_folder, fixed_thumbnail_name),
-    "extractor_args": {"youtube": {"player_client": ["android"]}},
-}
+    thumbnail_opts = {
+        "skip_download": True,
+        "writethumbnail": True,
+        "quiet": True,
+        "outtmpl": os.path.join(download_folder, fixed_thumbnail_name),
+        "extractor_args": {"youtube": {"player_client": ["android"]}},
+    }
 
-with YoutubeDL(thumbnail_opts) as ydl:
-    ydl.extract_info(video_url, download=False)
+    with YoutubeDL(thumbnail_opts) as ydl:
+        ydl.extract_info(video_url, download=False)
 
 # Find whatever thumbnail yt-dlp actually created
 thumbs = glob.glob(os.path.join(download_folder, fixed_thumbnail_name + ".*"))
